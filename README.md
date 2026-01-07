@@ -1,31 +1,48 @@
 # Red Hackle Cleaning Services website
 
-Single-page marketing site for Red Hackle Cleaning Services built with Next.js (App Router).
+Commercial-first marketing site for Red Hackle Cleaning Services built with Next.js (App Router) and Tailwind CSS.
 
-## Key files
-- `app/layout.tsx`: Global metadata/head configuration and JSON-LD.
-- `app/page.tsx`: Main single-page layout (hero, services, coverage, testimonials, about, contact, FAQ).
-- `app/sitemap.xml/route.ts`: Dynamic sitemap.
-- `app/robots.txt/route.ts`: Robots.txt served via route handler.
+## Tech stack
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS 4
 
 ## Running locally
 ```bash
-pnpm dev # or npm/yarn/bun dev
+pnpm install
+pnpm dev
 ```
 Visit http://localhost:3000.
 
-## Search Console and analytics readiness
-- Add a Google Search Console verification meta tag via the `verification.google` field in `app/layout.tsx` metadata or by inserting a `<meta name="google-site-verification" ...>` inside the `<head>` block there.
-- Add analytics/gtag scripts with Next.js `<Script>` in `app/layout.tsx` so they load globally without changing page layout. Keep them `afterInteractive` to avoid layout shift.
+## Build & deployment
+```bash
+pnpm build
+pnpm start
+```
 
-## Future content/FAQ ideas (for approval before adding)
-- Coverage radius specifics (e.g., travel fees beyond 30 miles).
-- Insurance and vetting process details.
-- Booking/lead times and cancellation flexibility.
-- How keys/access and alarm codes are handled for commercial cleans.
+## SEO & structured data
+- Per-page metadata with Open Graph + Twitter cards in each route.
+- JSON-LD for LocalBusiness and services in `app/layout.tsx`.
+- Dynamic `sitemap.xml` and `robots.txt` route handlers.
 
-## Off-site/local SEO actions to consider
-- Keep Google Business Profile updated with photos, hours, services and posts.
-- Maintain consistent NAP (name, address, phone) across directories (Yell, Thomson Local, Bing Places, Apple Maps).
-- Encourage Google reviews after completed jobs; respond to all reviews.
-- List core services and locations in trusted local/industry directories.
+## Dependency update tooling
+- Renovate config: `renovate.json`.
+- Dependabot config: `.github/dependabot.yml`.
+
+## Where to edit content
+- **Homepage:** `app/page.tsx`
+- **Commercial & contract pages:** `app/commercial-cleaning/page.tsx`, `app/contract-cleaning/page.tsx`
+- **Service pages:** `app/services/*/page.tsx`
+- **Operations & compliance pages:** `app/slas/page.tsx`, `app/onboarding-process/page.tsx`, `app/quality-assurance/page.tsx`, `app/reporting/page.tsx`
+- **Case studies:** `app/case-studies/page.tsx`
+- **Contact form:** `components/contact-form.tsx`
+- **Header & footer:** `components/site-header.tsx`, `components/site-footer.tsx`
+
+## Adding or updating assets
+- **Images:** `public/images/`
+- **Logos / review embeds:** Update the placeholder block on `app/page.tsx`.
+- **Copy updates:** Edit text directly in the page files above.
+
+## Notes
+- Keep analytics scripts in `app/layout.tsx` to avoid removing tracking.
+- Update `app/sitemap.xml/route.ts` if new routes are added.

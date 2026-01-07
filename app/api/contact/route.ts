@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
     const lastName = sanitizeInput((formData.get("lastName") as string) || "")
     const email = sanitizeInput((formData.get("email") as string) || "")
     const phone = sanitizeInput((formData.get("phone") as string) || "")
+    const company = sanitizeInput((formData.get("company") as string) || "")
     const message = sanitizeInput((formData.get("message") as string) || "")
     const timestamp = (formData.get("timestamp") as string) || ""
     const honeypot = (formData.get("website") as string) || ""
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
     // 3. Log the submission securely
 
     // Contact form submission would be logged to monitoring service in production
-    // Data: firstName, lastName, email, phone, message (truncated), timestamp, ip
+    // Data: firstName, lastName, email, phone, company (optional), message (truncated), timestamp, ip
 
     return NextResponse.json(
       { success: true, message: "Message sent successfully" },

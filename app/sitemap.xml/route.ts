@@ -1,65 +1,42 @@
 import { NextResponse } from "next/server"
 
+const baseUrl = "https://www.redhacklecleaningservices.com"
+
+const pages = [
+  "",
+  "/commercial-cleaning",
+  "/contract-cleaning",
+  "/slas",
+  "/onboarding-process",
+  "/quality-assurance",
+  "/reporting",
+  "/services",
+  "/services/office-workplace-cleaning",
+  "/services/contract-cleaning",
+  "/services/end-of-tenancy-cleaning",
+  "/services/builders-sparkle-cleans",
+  "/services/deep-one-off-cleans",
+  "/about",
+  "/coverage-areas",
+  "/case-studies",
+  "/contact",
+  "/privacy-policy",
+  "/terms-of-service",
+]
+
 export function GET() {
   const lastmod = new Date().toISOString()
 
+  const urls = pages
+    .map((path) => {
+      const loc = `${baseUrl}${path}`
+      return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${path === "" ? "1.0" : "0.7"}</priority>\n  </url>`
+    })
+    .join("\n")
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/#services</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/#coverage</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/#testimonials</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/#about</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/#contact</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/#faq</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/privacy-policy</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.redhacklecleaningservices.com/terms-of-service</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <!-- Note: /new-starter is intentionally excluded from sitemap -->
+${urls}
 </urlset>`
 
   return new NextResponse(sitemap, {
