@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import GoogleReviewsSection from "@/components/site/google-reviews"
 
 export const metadata: Metadata = {
   title: "About",
@@ -72,6 +73,8 @@ export default function AboutPage() {
           </Card>
         </div>
       </section>
+
+      <GoogleReviewsSection />
     </main>
   )
 }

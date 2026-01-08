@@ -4,6 +4,7 @@ import { ArrowRight, BadgeCheck, Building2, ClipboardCheck, ShieldCheck, Sparkle
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import GoogleReviewsSection from "@/components/site/google-reviews"
 
 const trustSignals = [
   "Fully insured and risk-assessed",
@@ -304,6 +305,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <GoogleReviewsSection />
 
       <section id="about" className="bg-white scroll-mt-24">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">

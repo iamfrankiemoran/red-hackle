@@ -15,6 +15,25 @@ pnpm dev
 ```
 Visit http://localhost:3000.
 
+## Google Business Profile reviews
+Set the following environment variables (see `.env.example`):
+- `GBP_ACCOUNT_ID`: Google Business Profile account ID (currently `214-716-3556`).
+- `GBP_LOCATION_ID`: Location resource name returned by the discovery script (for example `locations/123456789`).
+- `GBP_GOOGLE_CLIENT_ID`, `GBP_GOOGLE_CLIENT_SECRET`, `GBP_GOOGLE_REFRESH_TOKEN`: OAuth 2.0 credentials for server-side access.
+- `GBP_REVIEWS_URL`: Public Google Maps reviews URL for the "View all reviews" CTA.
+
+### Discovering location IDs
+Run the location discovery helper to list available locations for the account:
+```bash
+node scripts/gbp-list-locations.mjs
+```
+Copy the `locations/…` value into `GBP_LOCATION_ID`.
+
+### Editing the homepage proof section
+The Google Reviews section is rendered in `components/site/google-reviews.tsx` and included in:
+- `app/page.tsx` (homepage proof section)
+- `app/about/page.tsx` (secondary placement)
+
 ## Build
 ```bash
 pnpm build
