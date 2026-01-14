@@ -5,7 +5,15 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { fetchGoogleReviews } from "@/lib/googleReviews"
+import { buildPageMetadata, siteMeta } from "@/lib/seo"
 import { testimonials } from "@/lib/testimonials"
+
+export const metadata = buildPageMetadata({
+  title: "Commercial & Contract Cleaning",
+  description:
+    "Commercial-first cleaning partner for offices, property managers, hospitality venues, and construction handovers across Dundee, Tayside, Fife, and Angus.",
+  path: "/",
+})
 
 const trustSignals = [
   "Fully insured and risk-assessed",
@@ -98,9 +106,30 @@ const processSteps = [
 export default async function HomePage() {
   const googleReviews = await fetchGoogleReviews()
   const items = [...googleReviews, ...testimonials]
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@graph": items.slice(0, 3).map((review) => ({
+      "@type": "Review",
+      author: {
+        "@type": "Person",
+        name: review.name,
+      },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.rating,
+        bestRating: "5",
+      },
+      reviewBody: review.quote,
+      itemReviewed: {
+        "@type": "LocalBusiness",
+        "@id": `${siteMeta.siteUrl}/#business`,
+      },
+    })),
+  }
 
   return (
     <main className="pb-16 md:pb-0">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }} />
       <section className="relative overflow-hidden bg-gray-950 text-white">
         <div className="absolute inset-0">
           <div className="h-full w-full bg-[radial-gradient(circle_at_top,_rgba(220,38,38,0.35),_transparent_60%)]" />

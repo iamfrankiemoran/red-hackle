@@ -21,6 +21,14 @@ pnpm build
 pnpm start
 ```
 
+## Testing
+```bash
+pnpm test
+```
+
+Vitest runs in a `jsdom` environment with Testing Library, and coverage is enforced at a minimum 80% across lines,
+branches, statements, and functions.
+
 ## SEO + structured data
 - Global metadata, Open Graph, and Twitter cards are configured in `app/layout.tsx`.
 - JSON-LD LocalBusiness and Service schema is injected in `app/layout.tsx`.

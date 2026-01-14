@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail } from "lucide-react"
+import { isValidEmail, isValidPhone, sanitizeInput } from "@/lib/security"
 
 const initialForm = {
   firstName: "",
@@ -18,14 +19,56 @@ export function ContactForm() {
   const [formData, setFormData] = useState(initialForm)
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
   const [formError, setFormError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof typeof initialForm, string>>>({})
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+    setFieldErrors((prev) => ({ ...prev, [name]: undefined }))
+    if (formStatus === "error") {
+      setFormStatus("idle")
+      setFormError(null)
+    }
+  }
+
+  const validateForm = () => {
+    const nextErrors: Partial<Record<keyof typeof initialForm, string>> = {}
+    const sanitizedMessage = sanitizeInput(formData.message)
+
+    if (!formData.firstName.trim()) {
+      nextErrors.firstName = "Please enter your first name."
+    }
+
+    if (!formData.lastName.trim()) {
+      nextErrors.lastName = "Please enter your last name."
+    }
+
+    if (!formData.email.trim() || !isValidEmail(formData.email)) {
+      nextErrors.email = "Enter a valid work email address."
+    }
+
+    if (!formData.phone.trim() || !isValidPhone(formData.phone)) {
+      nextErrors.phone = "Enter a valid UK phone number."
+    }
+
+    if (!sanitizedMessage) {
+      nextErrors.message = "Please tell us about your cleaning requirements."
+    }
+
+    return nextErrors
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    const validationErrors = validateForm()
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors)
+      setFormStatus("error")
+      setFormError("Please review the highlighted fields before sending your enquiry.")
+      return
+    }
+
     setFormStatus("submitting")
     setFormError(null)
 
@@ -52,7 +95,7 @@ export function ContactForm() {
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-4" onSubmit={handleSubmit} noValidate>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <label className="text-sm font-semibold text-gray-700" htmlFor="firstName">
@@ -66,7 +109,14 @@ export function ContactForm() {
             onChange={handleInputChange}
             autoComplete="given-name"
             required
+            aria-invalid={Boolean(fieldErrors.firstName)}
+            aria-describedby={fieldErrors.firstName ? "firstName-error" : undefined}
           />
+          {fieldErrors.firstName ? (
+            <p id="firstName-error" className="text-xs text-red-600">
+              {fieldErrors.firstName}
+            </p>
+          ) : null}
         </div>
         <div className="space-y-2">
           <label className="text-sm font-semibold text-gray-700" htmlFor="lastName">
@@ -80,7 +130,14 @@ export function ContactForm() {
             onChange={handleInputChange}
             autoComplete="family-name"
             required
+            aria-invalid={Boolean(fieldErrors.lastName)}
+            aria-describedby={fieldErrors.lastName ? "lastName-error" : undefined}
           />
+          {fieldErrors.lastName ? (
+            <p id="lastName-error" className="text-xs text-red-600">
+              {fieldErrors.lastName}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -98,7 +155,14 @@ export function ContactForm() {
             onChange={handleInputChange}
             autoComplete="email"
             required
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
           />
+          {fieldErrors.email ? (
+            <p id="email-error" className="text-xs text-red-600">
+              {fieldErrors.email}
+            </p>
+          ) : null}
         </div>
         <div className="space-y-2">
           <label className="text-sm font-semibold text-gray-700" htmlFor="phone">
@@ -113,7 +177,14 @@ export function ContactForm() {
             onChange={handleInputChange}
             autoComplete="tel"
             required
+            aria-invalid={Boolean(fieldErrors.phone)}
+            aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
           />
+          {fieldErrors.phone ? (
+            <p id="phone-error" className="text-xs text-red-600">
+              {fieldErrors.phone}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -129,7 +200,14 @@ export function ContactForm() {
           onChange={handleInputChange}
           required
           rows={5}
+          aria-invalid={Boolean(fieldErrors.message)}
+          aria-describedby={fieldErrors.message ? "message-error" : undefined}
         />
+        {fieldErrors.message ? (
+          <p id="message-error" className="text-xs text-red-600">
+            {fieldErrors.message}
+          </p>
+        ) : null}
       </div>
 
       <input type="text" name="website" tabIndex={-1} aria-hidden="true" className="hidden" />
@@ -145,7 +223,7 @@ export function ContactForm() {
         </p>
       )}
       {formStatus === "error" && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-red-600" role="alert" aria-live="polite">
           {formError || "Something went wrong. Please try again."}
         </p>
       )}
